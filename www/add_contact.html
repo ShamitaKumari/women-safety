@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+      <title>Login Form Design</title>
+      <link rel="stylesheet" type="text/css" href="add_contacts.css">
+
+      <script>
+        alert("you have successfully registered");
+        </script>
+<script type="text/javascript">
+    $(document).ready(function(){
+       // alert("check");
+        //$.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/session.php",type: 'get', success: function(result){
+          
+    //if(result!=="success"){
+    //console.log(result);
+  //  alert("loged in");
+   // window.location="index.html"
+    
+//}
+ // }});
+        });
+    var id = window.localStorage.getItem("id");
+    alert(id);
+    $(document).ready(function(){
+$("#addButton").click(function(){
+    //document.getElementById("addButton").disabled = true;
+ var num1=$("#number1").val();
+// alert(num1);
+ var num2=$("#number2").val();
+// alert(num2);
+ var email=$("#email").val();
+ // alert(email);
+  if (email !== "" && num1 !== "" && num2 !== "") {
+    console.log("good");
+    $.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/addnum.php?email="+ email +'&num1='+ num1 + '&num2='+ num2+'&id='+id,type: 'POST', success: function(result){
+    if(result=="success"){
+  //  console.log(result);
+    alert("updated successfully");
+    window.location="viewcontact.html"
+    
+}else{
+  //  console.log(result);
+    alert("Please try again");
+    window.location="add_contact.html"
+}
+  }});
+}
+});
+});
+
+</script>
+<script type="text/javascript">
+// geolocation.
+  $(document).ready(function() {
+alert('in ready');
+    function getLocation() {
+alert('in getlocation');
+
+    navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+}
+function showPosition(position) {
+alert('in showPosition');
+ var x=position.coords.latitude;//"Latitude: " +
+ var y= position.coords.longitude;//"Longitude: " +
+ alert(x);
+ alert(y);
+}
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      alert("User denied the request for Geolocation.");
+      break;
+    case error.POSITION_UNAVAILABLE:
+      alert("Location information is unavailable.");
+      break;
+    case error.TIMEOUT:
+      alert("The request to get user location timed out.");
+      break;
+    case error.UNKNOWN_ERROR:
+      alert("An unknown error occurred.");
+      break;
+  }
+}
+getLocation();
+    var audioElement = document.createElement('audio');
+    audioElement.setAttribute('src', 'https://sabbathless-books.000webhostapp.com/ws/Police Siren3.mp3');
+    
+    audioElement.addEventListener('ended', function() {
+        this.play();
+    }, false);
+$('#play').click(function() {
+
+//var x='52.2345';
+//var y='-1.43';
+
+       //audioElement.play();
+alert(email);
+
+var email=$("#email").val();
+setTimeout(function sendmail(){
+       $.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/sendmail.php?email="+ email +'&Latitude='+ x + '&Longitude='+ y,type: 'POST', success: function(result){
+  }});
+  alert("sending mail");}, 5000);
+  sendmail();
+        });
+  });
+</script></head>
+      <body>
+
+          <div id="form" class="loginform">
+                  <p>First Contact</p>
+                  <input id="number1" type="text" name="" placeholder="+44 7444444441" >
+
+                  <p>Second Contact</p>
+                  <input id="number2" type="text"  name="" placeholder="+44 7444444441" >
+                  <p>Email to Notify</p>
+                  <input type="text" id="email" placeholder="e.g. joe.bloggs@gmail.com" name="email" minlength="5">
+                  <input id="addButton"class="submit-button" type="submit" name="" value="Add">
+
+                  <button class="submit-button" type="button" id="play">Sound</button>
+          </div>
+  </body>
+
+  </html>

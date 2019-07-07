@@ -1,0 +1,120 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="cordova.js"></script>
+ <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+ <script type="text/javascript">
+
+
+    function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+       function onDeviceReady() {
+  //  console.log(navigator.accelerometer);
+  var app = {
+    checkSMSPermission: function() {
+        var success = function (hasPermission) {
+            if (hasPermission) {
+                sms.send();
+            }
+            else {
+                // show a helpful message to explain why you need to require the permission to send a SMS
+                // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices
+            }
+        };
+        var error = function (e) { alert('Something went wrong:' + e); };
+        sms.hasPermission(success, error);
+    },
+    requestSMSPermission: function() {
+        var success = function (hasPermission) {
+            if (!hasPermission) {
+                sms.requestPermission(function() {
+                    console.log('[OK] Permission accepted')
+                }, function(error) {
+                    console.info('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })
+            }
+        };
+        var error = function (e) { alert('Something went wrong:' + e); };
+        sms.hasPermission(success, error);
+    }
+};
+}
+    }
+//console.log(navigator.accelerometer);
+
+    $(document).ready(function(){
+        //alert("check");
+        $.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/session.php",type: 'get', success: function(result){
+    if(result=="success"){
+    //console.log(result);
+    //alert("loged in");
+    window.location="viewcontact.html"
+}
+  }});
+        });
+    $(document).ready(function(){
+$("#Button").click(function(){
+   // document.getElementById("Button").disabled = true;
+ var email=$("#emailid").val();
+// alert(email);
+ var pass=$("#password").val();
+ //alert(pass);
+ var dataTosend='email='+ email +'&password='+ pass;
+
+  if (email !== "" && pass !== "") {
+    //console.log("good");
+    $.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/login.php?email="+ email +'&password='+ pass,type: 'POST', success: function(result){
+        var data = result;
+        //alert(data);
+        var duce = jQuery.parseJSON(data);
+      var status =duce.status;
+    if(status=="success"){
+    //console.log(status);
+    //alert("loged in");
+    window.location="viewcontact.html";
+    var id = duce.user_data["id"];
+    window.localStorage.setItem("id", id);
+    var see = window.localStorage.getItem("id");
+    alert(see);
+    
+}else{
+    console.log(status);
+   // alert("Please try again");
+    window.location="index.html";
+}
+  }});
+}
+});
+
+});
+
+
+
+</script>
+
+</head>
+<body onload="onLoad()">
+
+<div  class="loginform">
+    <img src="img/icon.png" class="icon">
+    <h1>Register Here</h1>
+    <div class="notification">
+   <form method="post" >
+        <p>Email</p>    
+        <input type="text" id="emailid" placeholder="e.g. joe.bloggs@gmail.com" name="email" minlength="5" required>
+        <p>Password</p>
+        <input type="password" id="password" placeholder="Must be at least 8 characters long" name="password" minlength="8" required>
+        <input class="submit-button" type="button" name="login" value="LOGIN" id="Button"></input>
+        <input class="submit-button" type="button" name="Register" value="Register" id="Button1" onclick="window.location.href='Register.html'"></input>
+
+   </form>
+    </div>
+</div>
+    </body>
+</html>

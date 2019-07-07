@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <title>Login Form Design</title>
+    <link rel="stylesheet" type="text/css" href="add_contacts.css"></head>
+<body>
+    <script>
+         alert("you have successfully registered");
+      </script>
+    <script>
+         $(document).ready(function(){
+           // alert("check");
+           console.log('cordova.plugins.CordovaCall is now available');
+            $.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/session.php",type: 'get', success: function(result){
+
+                if(result!=="success"){
+                    //console.log(result);
+                    //  alert("loged in");
+                     window.location="index.html";
+                }
+            }});
+         var id = window.localStorage.getItem("id");
+         console.log("good");
+         $.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/viewnum.php?id="+ id,type: 'get', success: function(result){
+         // alert(result);
+            var data = result;
+            var duce = jQuery.parseJSON(data);
+            var status =duce.status;
+           if(status=="success"){
+           // alert("ok");
+         $("#num1").html(duce.user_data['num1']);
+         $("#num2").html(duce.user_data['num2']);
+         $("#imp_email").html(duce.user_data['imp_email']);
+         var num = duce.user_data['num1'];
+         window.localStorage.setItem("num", num);
+         var num2 = duce.user_data['num2'];
+         window.localStorage.setItem("num2", num2);
+         //alert(num);
+         }else{
+         //  console.log(result);
+         //alert("Please try again");
+         window.location="add_contact.html";
+         }
+         }});
+
+
+         // geolocation.
+
+         alert('in ready');
+         function getLocation() {
+         alert('in getlocation');
+
+         navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+         }
+         function showPosition(position) {
+         alert('in showPosition');
+         var x=position.coords.latitude;//"Latitude: " +
+         var y= position.coords.longitude;//"Longitude: " +
+         //alert(x);
+         //alert(y);
+         }
+         function showError(error) {
+         switch(error.code) {
+         case error.PERMISSION_DENIED:
+          alert("User denied the request for Geolocation.");
+          break;
+         case error.POSITION_UNAVAILABLE:
+          alert("Location information is unavailable.");
+          break;
+         case error.TIMEOUT:
+          alert("The request to get user location timed out.");
+          break;
+         case error.UNKNOWN_ERROR:
+          alert("An unknown error occurred.");
+          break;
+         }
+         }
+         getLocation();
+         var audioElement = document.createElement('audio');
+         audioElement.setAttribute('src', 'https://sabbathless-books.000webhostapp.com/ws/Police Siren3.mp3');
+
+         audioElement.addEventListener('ended', function() {
+            this.play();
+         }, false);
+
+         //sms
+
+         var app = {
+         sendSms: function() {
+            var number = '+44'+ window.localStorage.getItem('num'); /* iOS: ensure number is actually a string */
+            var number2 = '+44'+ window.localStorage.getItem('num2');
+            //alert(number);
+            var message = 'Help! This is an emergency, MY Location is: https://www.google.com/maps/search/?api=1&query='+x+','+y;
+            console.log("number=" + number + ", message= " + message);
+
+            //CONFIGURATION
+            var options = {
+                replaceLineBreaks: false, // true to replace \n by a new line, false by default
+                android: {
+                    intent: 'INTENT'  // send SMS with the native android SMS messaging
+                    //intent: '' // send SMS without opening any other app
+                }
+            };
+
+            var success = function () { alert('Message sent successfully'); };
+            var error = function (e) { alert('Message Failed:' + e); };
+            sms.send(number, message, options, success, error);
+            sms.send(number2, message, options, success, error);
+         }
+         };
+
+         //sms closed
+
+
+            $('#play').click(function() {
+            audioElement.play();
+            app.sendSms();
+            window.plugins.CallNumber.callNumber(onSuccess, onError, number, bypassAppChooser);
+            function onSuccess(result){
+                console.log("Success:"+result);
+            }
+
+            function onError(result) {
+                 console.log("Error:"+result);
+            }
+
+           });
+    $("#logout").click(function(){
+
+         document.getElementById("logout").disabled = true;
+
+         $.ajax({url: "https://sabbathless-books.000webhostapp.com/ws/signout.php",type: 'post', success: function(result){
+            var data = result;
+            alert("good");
+         if(data=="success"){
+         //console.log(data);
+         //alert("loged in");
+         window.location="index.html";
+
+         }else{
+         console.log(data);
+         // alert("Please try again");
+         window.location="viewcontact.html";
+         }
+         }});
+    });
+         });
+
+
+    </script>
+
+
+<div id="form" class="loginform">
+    <p>First Contact</p>
+    <span id="num1"></span>
+    <p>Second Contact</p>
+    <span id="num2"></span>
+    <p>Email to Notify</p>
+    <span id="imp_email"></span><br>
+    <input id="addButton"class="submit-button" type="submit" name="" value="update " onclick="window.location.href='add_contact.html'"  >
+    <input class="submit-button" type="button" id="play" value="Sound">
+    <input class="submit-button" type="button" id="logout" value="logout">
+    </form>
+</div>
+</body>
+</html>
